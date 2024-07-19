@@ -313,7 +313,7 @@ if (!isset($_SESSION["login_type"])) {
                           <th>Tahun Ajaran</th>
                           <th>Bulan Tagihan</th>
                           <th>Tahun Tagihan</th>
-                          <th>Jumlah Tagihan</th>
+                          <th>Jumlah Tag  ihan</th>
                           <th>Action</th>
                         </tr>
                       </thead>

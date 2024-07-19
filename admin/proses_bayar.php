@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tahun = $_POST['tahunA'];
     $tanggal_bayar = $_POST['tglbayar'];
     $bulan_bayar = $_POST['bulan'];
+    $idbulan = $_POST['idbulan'];
     $tahun_bayar = $_POST['tahun'];
     $jumlah_bayar = $_POST['jumlah'];
     $metode_bayar = $_POST['metode'];
@@ -22,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result_pembayaran) {
         // Jika penyimpanan data pembayaran berhasil, sekarang kita akan menyimpan detail tagihan
-        $query_detail_tagihan = "INSERT INTO detail_tagihan (idsiswa, idtagihan, idtahun, status_tagihan) 
-                                VALUES ('$ids', '$idt', '$tahun', 'Lunas')";
+        $query_detail_tagihan = "INSERT INTO detail_tagihan (idsiswa, idtagihan, idtahun, idbulan, status_tagihan) 
+                                VALUES ('$ids', '$idt', '$tahun', '$idbulan', 'Lunas')";
 
         $result_detail_tagihan = mysqli_query($koneksi, $query_detail_tagihan);
 

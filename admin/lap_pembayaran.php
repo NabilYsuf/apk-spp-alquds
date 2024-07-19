@@ -302,116 +302,114 @@ if (!isset($_SESSION["login_type"])) {
               </div>-->
 
               <div class="card">
-                <div class="card-body">
-                  <form method="get">
-                    <div class="form-group">
-                        <label for="tahun_ajaran">Pilih Tahun Ajaran:</label>
-                        <select name="tahun_ajaran" id="tahun_ajaran" class="select2 form-select shadow-none" style="width: 100%; height: 36px">
-                            <option selected disabled>Pilih Tahun Ajaran</option>
-                            <?php 
-                            $ta = mysqli_query($koneksi, "SELECT * FROM tb_ta");
-                            while ($ra = mysqli_fetch_assoc($ta)){
-                            ?>
-                            <option value="<?php echo $ra['id_ta'] ?>"><?php echo $ra['ta']; ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="bulan_ajaran">Pilih Bulan Bayar:</label>
-                        <select name="bulan_ajaran" id="bulan_ajaran" class="select2 form-select shadow-none" style="width: 100%; height: 36px">
-                            <option selected disabled>Pilih Bulan Bayar</option>
-                            <?php 
-                            $ba = mysqli_query($koneksi, "SELECT * FROM tb_ba");
-                            while ($ra = mysqli_fetch_assoc($ba)){
-                            ?>
-                            <option value="<?php echo $ra['id_ba'] ?>"><?php echo $ra['ba']; ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Tampilkan Laporan</button>
-                  </form>
-                  <br>
-
-                  <?php 
-                  if (isset($_GET['tahun_ajaran']) && isset($_GET['bulan_ajaran'])) {
-                    $tahun = $_GET['tahun_ajaran'];
-                    $bulan = $_GET['bulan_ajaran']
-                  ?>
-                  <div class="card-title" style="display: grid; justify-content: firts;">
-                    <a class="btn btn-sm btn-warning" href="cetak.php?tahun=<?php echo $tahun; ?>" target="_blank"> Unduh Laporan</a>
-                  </div>
-                  <hr>
-                  <div class="table-responsive">
-                    <table
-                      id="zero_config"
-                      class="table table-striped table-bordered"
-                    >
-                      <thead>
-                        <tr>
-                          <th>No.</th>
-                          <th>Tahun Ajaran</th>
-                          <th>Nama Siswa</th>
-                          <th>Tgl. Bayar</th>
-                          <th>Bulan Bayar</th>
-                          <th>Tahun Bayar</th>
-                          <th>Jml. Bayar</th>
-                          <th>Metode Bayar</th>
-                          <th>Status Bayar</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php
-                        $no=1; 
-                        $data = mysqli_query($koneksi, "SELECT * FROM tb_spp, tb_siswa, tb_ta WHERE id_siswa=siswa_id AND id_ta=ta_id AND id_ta=taid AND ta_id='$tahun' AND taid='$tahun'");
-                        while ($row = mysqli_fetch_assoc($data)) {
-                          $status = $row['status_bayar'];
-                          $tgl = $row['tgl_bayar'];
-                          $bln = $row['bulan_bayar'];
-
-                          //tanggal
-                          setlocale(LC_TIME, 'id_ID');
-                          $tanggal = strftime('%d %B %Y', strtotime($tgl));
-
-                          //bulan
-                          setlocale(LC_TIME, 'id_ID');
-                          $bln_format = strftime('%B %Y', strtotime($bln));
-                        ?>
-                        <tr>
-                          <td><?php echo $no++; ?>.</td>
-                          <td><?php echo $row['ta']; ?></td>
-                          <td><?php echo $row['nama_siswa']; ?></td>
-                          <td><?php echo $tanggal; ?></td>
-                          <td><?php echo $bln_format; ?></td>
-                          <td><?php echo $row['tahun_bayar']; ?></td>
-                          <td><?php echo "Rp. " .number_format($row['jumlah_bayar']). ",-"; ?></td>
-                          <td><?php echo $row['metode_bayar']; ?></td>
-                          <td>
-                            <?php if ($status == 1) { ?>
-                              <span class="badge bg-success">Sudah Bayar</span>
-                            <?php } ?>
-                          </td>
-                          <td>
-                            <a class="btn btn-sm btn-danger" href="kwintasi.php?nisn=<?php echo $row['id_siswa']; ?>&idspp=<?php echo $row['id_spp']; ?>" target="_blank"><i class="mdi mdi-printer"></i></a>
-                          </td>
-                        </tr>
-                        <?php } ?>
-                      </tbody>
-                    </table>
-                  </div>
-                  <?php }else{ ?>
-                    <center>
-                      <div class="alert alert-primary" role="alert">
-                        Silakan Filter Tahun Ajaran & Bulan Untuk Menampilkan Laporan
-                      </div>
-                    </center>
-                  <?php } ?>
-                </div>
-              </div>
-
+    <div class="card-body">
+        <form method="get">
+            <div class="form-group">
+                <label for="ta">Pilih Tahun Ajaran:</label>
+                <select name="ta" id="ta" class="select2 form-select shadow-none" style="width: 100%; height: 36px">
+                    <option selected disabled>Pilih Tahun Ajaran</option>
+                    <?php 
+                    $ta = mysqli_query($koneksi, "SELECT * FROM tb_ta");
+                    while ($ra = mysqli_fetch_assoc($ta)){
+                    ?>
+                    <option value="<?php echo $ra['id_ta'] ?>"><?php echo $ra['ta']; ?></option>
+                    <?php } ?>
+                </select>
             </div>
-          </div>
+            
+            <div class="form-group">
+                <label for="idbulan">Pilih Bulan Bayar:</label>
+                <select name="idbulan" id="idbulan" class="select2 form-select shadow-none" style="width: 100%; height: 36px">
+                    <option selected disabled>Pilih Bulan Bayar</option>
+                    <?php 
+                    $ba = mysqli_query($koneksi, "SELECT * FROM tb_ba");
+                    while ($ra = mysqli_fetch_assoc($ba)){
+                    ?>
+                    <option value="<?php echo $ra['id_ba'] ?>"><?php echo $ra['ba']; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Tampilkan Laporan</button>
+        </form>
+        <br>
+
+        <?php 
+        if (isset($_GET['ta']) && isset($_GET['idbulan'])) {
+            $tahun = $_GET['ta'];
+            $bulan = $_GET['idbulan']; 
+        ?>
+        <div class="card-title" style="display: grid; justify-content: first;">
+            <a class="btn btn-sm btn-warning" href="cetak.php?tahun=<?php echo $tahun; ?>&bulan=<?php echo $bulan; ?>" target="_blank">Unduh Laporan</a>
+        </div>
+        <hr>
+        <div class="table-responsive">
+            <table id="zero_config" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Tahun Ajaran</th>
+                        <th>Nama Siswa</th>
+                        <!-- <th>Tgl. Bayar</th> -->
+                        <th>Bulan Bayar</th>
+                        <th>Tahun Bayar</th>
+                        <th>Jml. Bayar</th>
+                        <th>Metode Bayar</th>
+                        <th>Status Bayar</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $no = 1; 
+                    $data = mysqli_query($koneksi, "SELECT * FROM tb_spp
+                                                    JOIN tb_siswa ON id_siswa = siswa_id
+                                                    JOIN tb_ta ON id_ta = ta_id
+                                                    JOIN tb_ba ON id_ba = ba_id
+                                                    WHERE ta_id = '$tahun' AND ba_id = '$bulan'");
+                    while ($row = mysqli_fetch_assoc($data)) {
+                        $status = $row['status_bayar'];
+                        $tgl = $row['tgl_bayar'];
+                        $bln = $row['bulan_bayar'];
+
+                        //tanggal
+                        setlocale(LC_TIME, 'id_ID');
+                        $tanggal = strftime('%d %B %Y', strtotime($tgl));
+
+                        //bulan
+                        $bln_format = strftime('%B %Y', strtotime($bln));
+                    ?>
+                    <tr>
+                        <td><?php echo $no++; ?>.</td>
+                        <td><?php echo $row['ta']; ?></td>
+                        <td><?php echo $row['nama_siswa']; ?></td>
+                        <!-- <td><?php echo $tanggal; ?></td> -->
+                        <td><?php echo $bln_format; ?></td>
+                        <td><?php echo $row['tahun_bayar']; ?></td>
+                        <td><?php echo "Rp. " . number_format($row['jumlah_bayar']) . ",-"; ?></td>
+                        <td><?php echo $row['metode_bayar']; ?></td>
+                        <td>
+                            <?php if ($status == 1) { ?>
+                                <span class="badge bg-success">Sudah Bayar</span>
+                            <?php } ?>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-danger" href="kwitansi.php?nisn=<?php echo $row['id_siswa']; ?>&idspp=<?php echo $row['id_spp']; ?>" target="_blank"><i class="mdi mdi-printer"></i></a>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+        <?php } else { ?>
+            <center>
+                <div class="alert alert-primary" role="alert">
+                    Silakan Filter Tahun Ajaran & Bulan Untuk Menampilkan Laporan
+                </div>
+            </center>
+        <?php } ?>
+    </div>
+</div>
+
           <!-- ============================================================== -->
           <!-- End PAge Content -->
           <!-- ============================================================== -->

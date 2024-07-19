@@ -289,6 +289,20 @@ if (!isset($_SESSION["login_type"])) {
                         </div>
                       </div>
                       <div class="col-md-6">
+                        <!-- Input Bulan Ajaran -->
+                        <div class="form-group">
+                          <label for="bulanAjaran">Bulan Ajaran</label>
+                          <select class="select2 form-select shadow-none" style="width: 100%; height: 36px" id="ba" name="ba">
+                            <option selected disabled>Pilih Bulan Ajaran</option>
+                            <?php 
+                            $dataa = mysqli_query($koneksi, "SELECT * FROM tb_ba");
+                            while ($ra = mysqli_fetch_assoc($dataa)){
+                            ?>
+                            <option value="<?php echo $ra['id_ba']; ?>"><?php echo $ra['ba']; ?></option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                      <div class="col-md-6">
                         <!-- Input Tahun Ajaran -->
                         <div class="form-group">
                           <label for="tahunAjaran">Tahun Ajaran</label>
@@ -311,9 +325,10 @@ if (!isset($_SESSION["login_type"])) {
               </div>
 
               <?php 
-              if (isset($_GET['nisn']) && isset($_GET['ta'])) {
+              if (isset($_GET['nisn']) && isset($_GET['ta']) && isset($_GET['ba'])) {
                 $id_siswa = $_GET["nisn"];
                 $ta = $_GET['ta'];
+                $ba = $_GET['ba'];
               ?>
               <?php
               // Query untuk mendapatkan informasi pembayaran terakhir
@@ -333,6 +348,7 @@ if (!isset($_SESSION["login_type"])) {
                   $bulan_spp = $data['bulan_bayar'];
                   $tanggal_spp = $data['tgl_bayar'];
                   $tahun_ajaran = $data['ta'];
+
 
                   //tanggal
                   setlocale(LC_TIME, 'id_ID');
@@ -368,14 +384,15 @@ if (!isset($_SESSION["login_type"])) {
                         <th scope="col">Nama Siswa</th>
                         <th scope="col">Tahun Ajaran</th>
                         <th scope="col">Bulan Tagihan</th>
-                        <th scope="col">Tahun Tagihan</th>
+                        <!-- <th scope="col">Tahun Tagihan</th> -->
                         <th scope="col">Jumlah Tagihan</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody class="customtable">
                       <?php 
-                      $dt = mysqli_query($koneksi, "SELECT * FROM tb_tagihan, tb_siswa, tb_ta WHERE id_ta=idta AND id_ta=ta_id AND id_siswa='$id_siswa' AND ta_id='$ta' AND idta='$ta'");
+                      $dt = mysqli_query($koneksi, "SELECT * FROM tb_tagihan, tb_siswa, tb_ta WHERE id_ta=idta AND id_ta=ta_id AND id_siswa='$id_siswa' AND ta_id='$ta' AND idta='$ta' AND ba_id = '$ba'");
+                      //note : perbaiki query agar bulan bisa di select
                       while ($rt = mysqli_fetch_assoc($dt)) {
                         $idt = $rt['id_tagihan'];
                         $bulan = $rt['bulan_tagihan'];
@@ -392,7 +409,7 @@ if (!isset($_SESSION["login_type"])) {
                         <td><?php echo $rt['nama_siswa']; ?></td>
                         <td><?php echo $rt['ta']; ?></td>
                         <td><?php echo $bulan_format; ?></td>
-                        <td><?php echo $rt['tahun_tagihan']; ?></td>
+                        <!-- <td><?php echo $rt['tahun_tagihan']; ?></td> -->
                         <td><?php echo "Rp. " .number_format($rt['jumlah_tagihan']). ",-"; ?></td>
                         <td>
                           <?php if ($tagihan == "") { ?>
@@ -434,6 +451,20 @@ if (!isset($_SESSION["login_type"])) {
                           <div class="mb-3">
                             <label for="tanggalBayar" class="form-label">Tanggal Bayar</label>
                             <input type="date" class="form-control" id="tanggalBayar" name="tglbayar" required>
+                          </div>
+                          <div class="col-md-6">
+                        <!-- Input Bulan Ajaran -->
+                          <div class="form-group">
+                            <label for="idbulan">Bulan Dibayar</label>
+                            <select class="select2 form-select shadow-none" style="width: 100%; height: 36px" id="idbulan" name="idbulan">
+                              <option selected disabled>Bulan Dibayar</option>
+                              <?php 
+                              $dataa = mysqli_query($koneksi, "SELECT * FROM tb_ba");
+                              while ($ra = mysqli_fetch_assoc($dataa)){
+                              ?>
+                              <option value="<?php echo $ra['id_ba']; ?>"><?php echo $ra['ba']; ?></option>
+                              <?php } ?>
+                            </select>
                           </div>
                           <div class="mb-3">
                             <label for="bulanBayar" class="form-label">Bulan Bayar</label>
@@ -495,7 +526,7 @@ if (!isset($_SESSION["login_type"])) {
                       <tbody>
                             <?php
                             $no = 1;
-                            $data = mysqli_query($koneksi, "SELECT * FROM tb_spp, tb_siswa, tb_ba, tb_ta WHERE id_siswa=siswa_id AND id_ta=ta_id AND id_ta=taid AND id_siswa='$id_siswa' AND ta_id='$ta' AND taid='$ta' AND id_ba=ba_id AND id_ba=baid AND ba_id='$ba' AND baid='$ba'");
+                            $data = mysqli_query($koneksi, "SELECT * FROM tb_spp, tb_siswa, tb_ta, tb_ba WHERE id_siswa=siswa_id AND id_ta=ta_id AND id_ta=taid AND id_siswa='$id_siswa' AND ta_id='$ta' AND taid='$ta' AND id_ba=ba_id AND id_ba=baid AND ba_id='$ba' AND baid='$ba'");
                             while ($row = mysqli_fetch_assoc($data)) {
                                 $status = $row['status_bayar'];
                                 $tgl = $row['tgl_bayar'];
