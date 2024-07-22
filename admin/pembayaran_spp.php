@@ -271,65 +271,50 @@ if (!isset($_SESSION["login_type"])) {
                   <h5 class="card-title mb-0">Filter Nis Siswa</h5>
                 </div>
                 <div class="container">
-                  <form method="GET">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <!-- Input NISN Siswa -->
-                        <div class="form-group">
-                          <label for="nisn">NISN Siswa</label>
-                          <select class="select2 form-select shadow-none" style="width: 100%; height: 36px" id="nisn" name="nisn">
-                            <option selected disabled>Pilih Nis Siswa</option>
-                            <?php 
-                            $datas = mysqli_query($koneksi, "SELECT * FROM tb_siswa");
-                            while ($rs = mysqli_fetch_assoc($datas)){
-                            ?>
-                            <option value="<?php echo $rs['id_siswa']; ?>"><?php echo $rs['nisn']; ?> <?php echo $rs['nama_siswa']; ?></option>
-                            <?php } ?>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <!-- Input Bulan Ajaran -->
-                        <div class="form-group">
-                          <label for="bulanAjaran">Bulan Ajaran</label>
-                          <select class="select2 form-select shadow-none" style="width: 100%; height: 36px" id="ba" name="ba">
-                            <option selected disabled>Pilih Bulan Ajaran</option>
-                            <?php 
-                            $dataa = mysqli_query($koneksi, "SELECT * FROM tb_ba");
-                            while ($ra = mysqli_fetch_assoc($dataa)){
-                            ?>
-                            <option value="<?php echo $ra['id_ba']; ?>"><?php echo $ra['ba']; ?></option>
-                            <?php } ?>
-                          </select>
-                        </div>
-                      <div class="col-md-6">
-                        <!-- Input Tahun Ajaran -->
-                        <div class="form-group">
-                          <label for="tahunAjaran">Tahun Ajaran</label>
-                          <select class="select2 form-select shadow-none" style="width: 100%; height: 36px" id="ta" name="ta">
-                            <option selected disabled>Pilih Tahun Ajaran</option>
-                            <?php 
-                            $dataa = mysqli_query($koneksi, "SELECT * FROM tb_ta");
-                            while ($ra = mysqli_fetch_assoc($dataa)){
-                            ?>
-                            <option value="<?php echo $ra['id_ta']; ?>"><?php echo $ra['ta']; ?></option>
-                            <?php } ?>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Tampilkan</button>
-                </form>
+    <form method="GET">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Input NISN Siswa -->
+                <div class="form-group">
+                    <label for="nisn">NISN Siswa</label>
+                    <select class="select2 form-select shadow-none" style="width: 100%; height: 36px" id="nisn" name="nisn">
+                        <option selected disabled>Pilih Nis Siswa</option>
+                        <?php 
+                        $datas = mysqli_query($koneksi, "SELECT * FROM tb_siswa");
+                        while ($rs = mysqli_fetch_assoc($datas)){
+                        ?>
+                        <option value="<?php echo $rs['id_siswa']; ?>"><?php echo $rs['nisn']; ?> <?php echo $rs['nama_siswa']; ?></option>
+                        <?php } ?>
+                    </select>
                 </div>
-                <br>
-              </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Input Tahun Ajaran -->
+                <div class="form-group">
+                    <label for="tahunAjaran">Tahun Ajaran</label>
+                    <select class="select2 form-select shadow-none" style="width: 100%; height: 36px" id="ta" name="ta">
+                        <option selected disabled>Pilih Tahun Ajaran</option>
+                        <?php 
+                        $dataa = mysqli_query($koneksi, "SELECT * FROM tb_ta");
+                        while ($ra = mysqli_fetch_assoc($dataa)){
+                        ?>
+                        <option value="<?php echo $ra['id_ta']; ?>"><?php echo $ra['ta']; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Tampilkan</button>
+    </form>
+</div>
+<br>
+</div>
 
-              <?php 
-              if (isset($_GET['nisn']) && isset($_GET['ta']) && isset($_GET['ba'])) {
-                $id_siswa = $_GET["nisn"];
-                $ta = $_GET['ta'];
-                $ba = $_GET['ba'];
-              ?>
+<?php 
+if (isset($_GET['nisn']) && isset($_GET['ta'])) {
+    $id_siswa = $_GET["nisn"];
+    $ta = $_GET['ta'];
+?>
               <?php
               // Query untuk mendapatkan informasi pembayaran terakhir
               $query = "SELECT siswa.nama_siswa, spp.bulan_bayar, spp.tgl_bayar, tahun_ajaran.ta
@@ -356,7 +341,7 @@ if (!isset($_SESSION["login_type"])) {
 
                   //bulan
                   setlocale(LC_TIME, 'id_ID');
-                  $bulan_spp = strftime('%B %Y', strtotime($bulan_spp));
+                  $bulan_spp = strftime('%B', strtotime($bulan_spp));
 
                   // Tampilkan pesan alert
                   echo '<div class="alert alert-success" role="alert">';
@@ -390,36 +375,36 @@ if (!isset($_SESSION["login_type"])) {
                       </tr>
                     </thead>
                     <tbody class="customtable">
-                      <?php 
-                      $dt = mysqli_query($koneksi, "SELECT * FROM tb_tagihan, tb_siswa, tb_ta WHERE id_ta=idta AND id_ta=ta_id AND id_siswa='$id_siswa' AND ta_id='$ta' AND idta='$ta' AND ba_id = '$ba'");
-                      //note : perbaiki query agar bulan bisa di select
-                      while ($rt = mysqli_fetch_assoc($dt)) {
-                        $idt = $rt['id_tagihan'];
-                        $bulan = $rt['bulan_tagihan'];
+                        <?php 
+                        $dt = mysqli_query($koneksi, "SELECT * FROM tb_tagihan, tb_siswa, tb_ta, tb_ba WHERE id_ta=idta AND id_ba=idba AND id_ta=ta_id AND id_siswa='$id_siswa' AND ta_id='$ta' AND idta='$ta'");
+                        //note : perbaiki query agar bulan bisa di select
+                        while ($rt = mysqli_fetch_assoc($dt)) {
+                            $idt = $rt['id_tagihan'];
+                            // $bulan = $rt['bulan_tagihan'];
 
-                        //bulan
-                        setlocale(LC_TIME, 'id_ID');
-                        $bulan_format = strftime('%B %Y', strtotime($bulan));
+                            // //bulan
+                            // setlocale(LC_TIME, 'id_ID');
+                            // $bulan_format = strftime('%B %Y', strtotime($bulan));
 
-                        $detail = mysqli_query($koneksi, "SELECT * FROM detail_tagihan WHERE idsiswa='$id_siswa' AND idtahun='$ta' AND idtagihan='$idt'");
-                        $rd = mysqli_fetch_assoc($detail);
-                        $tagihan = $rd['status_tagihan'] ?? null;
-                      ?>
-                      <tr>
-                        <td><?php echo $rt['nama_siswa']; ?></td>
-                        <td><?php echo $rt['ta']; ?></td>
-                        <td><?php echo $bulan_format; ?></td>
-                        <!-- <td><?php echo $rt['tahun_tagihan']; ?></td> -->
-                        <td><?php echo "Rp. " .number_format($rt['jumlah_tagihan']). ",-"; ?></td>
-                        <td>
-                          <?php if ($tagihan == "") { ?>
-                            <a class="btn btn-sm btn-primary" href="" data-bs-toggle="modal" data-bs-target="#bayarModal<?php echo $rt['id_tagihan']; ?>"><i class="mdi mdi-credit-card"></i> Bayar SPP</a>
-                          <?php }elseif ($tagihan == "Lunas") { ?>
-                            <span class="badge bg-success">Sudah Lunas</span>
-                          <?php } ?>
-                        </td>
-                      </tr>
-                      <?php } ?>
+                            $detail = mysqli_query($koneksi, "SELECT * FROM detail_tagihan WHERE idsiswa='$id_siswa' AND idtahun='$ta' AND idtagihan='$idt'");
+                            $rd = mysqli_fetch_assoc($detail);
+                            $tagihan = $rd['status_tagihan'] ?? null;
+                        ?>
+                        <tr>
+                            <td><?php echo $rt['nama_siswa']; ?></td>
+                            <td><?php echo $rt['ta']; ?></td>
+                            <td><?php echo $rt['ba']; ?></td>
+                            <!-- <td><?php echo $rt['tahun_tagihan']; ?></td> -->
+                            <td><?php echo "Rp. " . number_format($rt['jumlah_tagihan']) . ",-"; ?></td>
+                            <td>
+                                <?php if ($tagihan == "") { ?>
+                                    <a class="btn btn-sm btn-primary" href="" data-bs-toggle="modal" data-bs-target="#bayarModal<?php echo $rt['id_tagihan']; ?>"><i class="mdi mdi-credit-card"></i> Bayar SPP</a>
+                                <?php } elseif ($tagihan == "Lunas") { ?>
+                                    <span class="badge bg-success">Sudah Lunas</span>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                        <?php } ?>
                     </tbody>
                   </table>
                   <br>
@@ -526,19 +511,19 @@ if (!isset($_SESSION["login_type"])) {
                       <tbody>
                             <?php
                             $no = 1;
-                            $data = mysqli_query($koneksi, "SELECT * FROM tb_spp, tb_siswa, tb_ta, tb_ba WHERE id_siswa=siswa_id AND id_ta=ta_id AND id_ta=taid AND id_siswa='$id_siswa' AND ta_id='$ta' AND taid='$ta' AND id_ba=ba_id AND id_ba=baid AND ba_id='$ba' AND baid='$ba'");
+                            $data = mysqli_query($koneksi, "SELECT * FROM tb_spp, tb_siswa, tb_ta, tb_ba WHERE id_siswa=siswa_id AND id_ta=ta_id AND id_ta=taid AND id_ba=ba_id AND id_ba=baid AND id_siswa='$id_siswa' AND ta_id='$ta' AND taid='$ta'");
                             while ($row = mysqli_fetch_assoc($data)) {
                                 $status = $row['status_bayar'];
                                 $tgl = $row['tgl_bayar'];
-                                $bln = $row['bulan_bayar'];
+                                // $bln = $row['bulan_bayar'];
 
                                 //tanggal
                                 setlocale(LC_TIME, 'id_ID');
                                 $tanggal = strftime('%d %B %Y', strtotime($tgl));
 
-                                //bulan
-                                setlocale(LC_TIME, 'id_ID');
-                                $bln_format = strftime('%B %Y', strtotime($bln));
+                                // //bulan
+                                // setlocale(LC_TIME, 'id_ID');
+                                // $bln_format = strftime('%B %Y', strtotime($bln));
                             ?>
                             <tr>
                                 <td><?php echo $no++; ?>.</td>

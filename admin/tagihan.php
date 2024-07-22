@@ -320,18 +320,18 @@ if (!isset($_SESSION["login_type"])) {
                       <tbody>
                         <?php
                         $no=1; 
-                        $data = mysqli_query($koneksi, "SELECT * FROM tb_tagihan, tb_ta WHERE id_ta=idta ORDER BY id_tagihan ASC");
+                        $data = mysqli_query($koneksi, "SELECT * FROM tb_tagihan, tb_ta, tb_ba WHERE id_ta=idta AND id_ba=idba ORDER BY id_tagihan ASC");
                         while ($row = mysqli_fetch_assoc($data)) {
-                          $bulan = $row['bulan_tagihan'];
+                          // $bulan = $row['bulan_tagihan'];
 
-                          //bulan
-                          setlocale(LC_TIME, 'id_ID');
-                          $bulan_format = strftime('%B %Y', strtotime($bulan));
+                          // //bulan
+                          // setlocale(LC_TIME, 'id_ID');
+                          // $bulan_format = strftime('%B %Y', strtotime($bulan));
                         ?>
                         <tr>
                           <td><?php echo $no++; ?>.</td>
                           <td><?php echo $row['ta']; ?></td>
-                          <td><?php echo $bulan_format; ?></td>
+                          <td><?php echo $row['ba']; ?></td>
                           <td><?php echo $row['tahun_tagihan']; ?></td>
                           <td><?php echo "Rp. " .number_format($row['jumlah_tagihan']). ",-"; ?></td>
                           <td>
@@ -356,22 +356,37 @@ if (!isset($_SESSION["login_type"])) {
                           </div>
                           <div class="modal-body">
                               <form method="POST" action="proses_tagihan.php">
-                                  <div class="mb-3">
-                                      <label for="" class="form-label">Tahun Ajaran</label>
-                                      <select class="form-select" id="nama" name="ta">
-                                        <option selected disabled>Pilih Tahun Ajaran</option>
-                                        <?php 
-                                        $s = mysqli_query($koneksi, "SELECT * FROM tb_ta");
-                                        while ($rs = mysqli_fetch_assoc($s)){
-                                        ?>
-                                        <option value="<?php echo $rs['id_ta']; ?>"><?php echo $rs['ta']; ?></option>
-                                        <?php } ?>
-                                      </select>
-                                  </div>
-                                  <div class="mb-3">
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Tahun Ajaran</label>
+                                    <select class="form-select" id="nama" name="ta">
+                                      <option selected disabled>Pilih Tahun Ajaran</option>
+                                      <?php 
+                                      $s = mysqli_query($koneksi, "SELECT * FROM tb_ta");
+                                      while ($rs = mysqli_fetch_assoc($s)){
+                                      ?>
+                                      <option value="<?php echo $rs['id_ta']; ?>"><?php echo $rs['ta']; ?></option>
+                                      <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Bulan Tagihan</label>
+                                    <select class="form-select" id="nama" name="ba">
+                                      <option selected disabled>Pilih Bulan Tagihan</option>
+                                      <?php 
+                                      $s = mysqli_query($koneksi, "SELECT * FROM tb_ba");
+                                      while ($rs = mysqli_fetch_assoc($s)){
+                                      ?>
+                                      <option value="<?php echo $rs['id_ba']; ?>"><?php echo $rs['ba']; ?></option>
+                                      <?php } ?>
+                                    </select>
+                                </div>
+
+                                <!-- <div class="mb-3">
                                       <label for="bulanTagihan" class="form-label">Bulan Tagihan</label>
                                       <input type="month" class="form-control" id="bulanTagihan" name="bulan">
-                                  </div>
+                                  </div> -->
+
                                   <div class="mb-3">
                                       <label for="tahunTagihan" class="form-label">Tahun Tagihan</label>
                                       <select class="form-select" id="tahun" name="tahun">
@@ -427,9 +442,18 @@ if (!isset($_SESSION["login_type"])) {
                                       </select>
                                   </div>
                                   <div class="mb-3">
-                                      <label for="bulanTagihan" class="form-label">Bulan Tagihan</label>
-                                      <input type="month" class="form-control" id="bulanTagihan" name="bulan" value="<?php echo $rt['bulan_tagihan']; ?>">
-                                  </div>
+                                    <label for="" class="form-label">Bulan Tagihan</label>
+                                    <select class="form-select" id="nama" name="ba">
+                                      <option selected disabled>Pilih Bulan Tagihan</option>
+                                      <?php 
+                                      $s = mysqli_query($koneksi, "SELECT * FROM tb_ba");
+                                      while ($rs = mysqli_fetch_assoc($s)){
+                                      ?>
+                                      <option value="<?php echo $rs['id_ba']; ?>"><?php echo $rs['ba']; ?></option>
+                                      <?php } ?>
+                                    </select>
+                                </div>
+
                                   <div class="mb-3">
                                       <label for="tahunTagihan" class="form-label">Tahun Tagihan</label>
                                       <select class="form-select" id="tahun" name="tahun">
